@@ -22,8 +22,7 @@ To run a benchmark (for example, BS), do
     nvidia-docker run -it chai bash -c "cd chai/OpenCL1.2/BS/ && ./bs"
 
 ## Docker: Running OpenCL 1.2 and 2.0 Benchmarks with the Intel OpenCL CPU Stacks
-
-[![Build Status](https://travis-ci.org/cwpearson/chai.svg?branch=feature%2Ftravis)](https://travis-ci.org/cwpearson/chai)
+[![Build Status](https://travis-ci.org/cwpearson/chai.svg?branch=master)](https://travis-ci.org/cwpearson/chai)
 
 Install `docker` for your system.
 
