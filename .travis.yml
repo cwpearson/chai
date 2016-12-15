@@ -9,20 +9,20 @@ before_install:
 - docker build -t $REPO:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu .
 
 script:
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/BFS  && ./bfs"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/BS   && ./bs"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/CEDD && ./cedd"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/CEDT && ./cedt"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/HSTI && ./hsti"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/HSTO && ./hsto"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/PAD  && ./pad"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/RSCD && ./rscd"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/RSCT && ./rsct"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/SC   && ./sc"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/SSSP && ./sssp"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/TQ   && ./tq"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/TQH  && ./tqh"
-- docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/TRNS && ./trns"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/BFS  && ./bfs"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/BS   && ./bs"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/CEDD && ./cedd"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/CEDT && ./cedt"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/HSTI && ./hsti"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/HSTO && ./hsto"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/PAD  && ./pad"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/RSCD && ./rscd"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/RSCT && ./rsct"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/SC   && ./sc"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/SSSP && ./sssp"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/TQ   && ./tq"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/TQH  && ./tqh"
+- docker run -it $REPO:$COMMIT bash -c "cd chai/OpenCL1.2/TRNS && ./trns"
 
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
