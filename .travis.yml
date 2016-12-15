@@ -1,0 +1,12 @@
+sudo: required
+
+language: c
+
+services:
+  - docker
+
+before_install:
+  - docker build -t cwpearson/chai-intel-opencl1.2-cpu .
+
+script:
+  - docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/BS && ./bs"
