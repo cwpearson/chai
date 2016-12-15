@@ -6,7 +6,7 @@ before_install:
 - echo $DOCKER_EMAIL
 - echo $DOCKER_USER
 - export REPO=cwpearson/chai-intel-opencl1.2-cpu
-- docker build -t $REPO:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu
+- docker build -t $REPO:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu .
 
 script:
 - docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/BFS  &&
