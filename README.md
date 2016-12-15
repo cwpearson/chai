@@ -23,6 +23,8 @@ To run a benchmark (for example, BS), do
 
 ## Docker: Running OpenCL 1.2 and 2.0 Benchmarks with the Intel OpenCL CPU Stacks
 
+[![Build Status](https://travis-ci.org/cwpearson/chai.svg?branch=feature%2Ftravis)](https://travis-ci.org/cwpearson/chai)
+
 Install `docker` for your system.
 
 To build the docker image for OpenCL 1.2 and 2.0 respectively, use
