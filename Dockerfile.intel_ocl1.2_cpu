@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install opencv, OpenCL 1.2 headers, and other things needed to build OpenCL code
-RUN apt-get update && apt-get install --no-install-recommends -y libopencv-dev alien wget g++ opencl-headers \
+RUN apt-get update -q && apt-get install --no-install-recommends -yq libopencv-dev alien wget g++ opencl-headers \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y libopencv-dev a
 RUN export RUNTIME_URL="http://registrationcenter-download.intel.com/akdlm/irc_nas/9019/opencl_runtime_16.1.1_x64_ubuntu_6.4.0.25.tgz" \
     && export TAR=$(basename ${RUNTIME_URL}) \
     && export DIR=$(basename ${RUNTIME_URL} .tgz) \
-    && wget ${RUNTIME_URL} \
+    && wget -q ${RUNTIME_URL} \
     && tar -xf ${TAR} \
     && for i in ${DIR}/rpm/*.rpm; do alien --to-deb $i; done \
     && rm -rfv ${DIR} ${TAR}

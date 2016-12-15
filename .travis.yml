@@ -4,8 +4,10 @@ services:
 - docker
 before_install:
 - echo $DOCKER_EMAIL
-- docker build -t cwpearson/chai-intel-opencl1.2-cpu -f  Dockerfile.intel_ocl1.2_cpu
-  .
+- echo $DOCKER_USER
+- export REPO=cwpearson/chai-intel-opencl1.2-cpu
+- docker build -t $REPO:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu
+
 script:
 - docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/BFS  &&
   ./bfs"
@@ -36,6 +38,16 @@ script:
 - docker run -it cwpearson/chai-intel-opencl1.2-cpu bash -c "cd chai/OpenCL1.2/TRNS
   && ./trns"
 
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
+
 env:
   global:
-    secure: WyFJbUSBamKMsNSgSp/Dp0LRynTku7alqJeZaKSWSjc8sNEbqbiDyyo4RVXkXSZTx+LN/IDihzRTQmhIvq2E4sKUpcSpWu/OWVUG6OmI2KJuiiJSjVrwfbOndlgNytjApzzPtLRzhgpWK207jtdgN2coRsZVgQF0OTRthITiSF4xzCzp5QXt758+wL3YUyKK6fXM9Jp6kKHd8LRf1gai7nl5AeX5VdAmPU18mrwc1LHdT0TWR7pDgHpqWacxVCdykqedxLgvJVU0CXXyHkaoKj61cNGydNQmzq2IjeYeNYrgvQ/ZzsJsVvSyB8g7rkRR0YnkiAHrYD29B/ZxUeTtimCUB488hN7HeyG58EjETUpjUqwxshPRnSc1q+pn3O487HcNkD/khiUKPM5RqBsX8PYrqfAStQJWa/R0PRY5zg1JofaWq4OvhK/2OB07A5VkYvm2E9I9CsXG+vuPGWoKiFoSz9ZihNVCbbxI2Dp8ivEl519N90uuoxbTIIUff4p9+6aFZj4kMTqyobYng36DM1dclRZFkCwF+VIEc05HGKffDM4W+tT4xTG/JelVqJpw/WysmzJAVgeCsLUzmEo/nCs9XQEXubnMhgpIvjzHq9Dwkh1mn+8D3pcjsaaBcpIQuCYguuUPFEWjPCxEJ9iJ6d3o+/Yqpbr1UWX9ZZZrmJQ=
+  - secure: WyFJbUSBamKMsNSgSp/Dp0LRynTku7alqJeZaKSWSjc8sNEbqbiDyyo4RVXkXSZTx+LN/IDihzRTQmhIvq2E4sKUpcSpWu/OWVUG6OmI2KJuiiJSjVrwfbOndlgNytjApzzPtLRzhgpWK207jtdgN2coRsZVgQF0OTRthITiSF4xzCzp5QXt758+wL3YUyKK6fXM9Jp6kKHd8LRf1gai7nl5AeX5VdAmPU18mrwc1LHdT0TWR7pDgHpqWacxVCdykqedxLgvJVU0CXXyHkaoKj61cNGydNQmzq2IjeYeNYrgvQ/ZzsJsVvSyB8g7rkRR0YnkiAHrYD29B/ZxUeTtimCUB488hN7HeyG58EjETUpjUqwxshPRnSc1q+pn3O487HcNkD/khiUKPM5RqBsX8PYrqfAStQJWa/R0PRY5zg1JofaWq4OvhK/2OB07A5VkYvm2E9I9CsXG+vuPGWoKiFoSz9ZihNVCbbxI2Dp8ivEl519N90uuoxbTIIUff4p9+6aFZj4kMTqyobYng36DM1dclRZFkCwF+VIEc05HGKffDM4W+tT4xTG/JelVqJpw/WysmzJAVgeCsLUzmEo/nCs9XQEXubnMhgpIvjzHq9Dwkh1mn+8D3pcjsaaBcpIQuCYguuUPFEWjPCxEJ9iJ6d3o+/Yqpbr1UWX9ZZZrmJQ=
+  - secure: G6TmC8c5ft7yO36p6sugXEr2ztV3jKeUlB8nrUgj0smAibJcl5EI0Kab29CtNFXLzOUlD8IGN/YHfJbzuiHkcWlwTQ2qGZGA1d6sBxkAzX5XrZetsJWIjcBG38klc43URNcbIrQpuRjawBT4AScCfVO9gkEioVaHxi5HyKJMdTD/dCX2L5dBy8IOGHuYp+Gs955b77WLpvhDL13G59LnPRaYr0Oto1qyOkcTq2h+ZuRZLzQkk4bHnz82TlHehFwC13ydtUSm4BkeWmRCV7YYe/TiNYc8YgE4ZsLJZ4plxFAzfIlaABI4opSPboCTT0mlvXOPV6iTRFCR0jMMwssERg9ZCYp72MNZbazVilamVVvcBh1h3sYSlAfk3+UsXyUN+O/Fd183OJohmuLNoaF7F7QUUreIF6Q+2ZcQ2OfrAgPqwpFYRUjRS96RN0xbYcG9aJ3fifuS7mmtUUKbZgvKNiqqumL40RAx6jzmxGJblk5MFnnMypC3rXzQpkM4UfVqkvoyC9IIffC4TmPNyDoemQxAMBAp6MAwa/HzTEZid62PDNblCviCG+lbFzHtaq21PpSc7SsQKS6joAgIQdC8FxEk3U29QrmvMXytz2rdkzrVFx0jOvZxpbl66Ua5yO4T38I0Adl2zSi0clG5aG7on7Gq3Y3uYWevsE9DS7O6AYY=
+  - secure: jjqGQ5/saSCrQ+qK/dXFUEvb6eWdS1UUjSq6ps/lsZFUHFuTIBjgAcPswUxss3Ctws1sYakf5Hw0p76FLFtchVoKQV4Q/IXkqb6au5nUconYwS8Up+nxXNpsFr2/GKEUgoSMcEmfFAHPV/i1SnHHY/nkE3Bv4URyUpuTlod6zF80gLSrmAZ5sNHySlnMPgzIMxdTrcanAvjouWG6kzNbSdaw0+K5f0t+MLf98tFwNatBDwXX0FmExDXxgSwJVbT89+8S6cdgN7ErEJiBD9Kctj6wNRgC6NfO2i72a34r8aOA/y0LhQjSps6Z3KZSv9vWfQZ3QfiEg0JOV3zrOx4ze14Pa2d7KpHwkofWQBv0pj0imh3rFSfl6pVDIHfFTGmL1YsBsNt5r7dkHsyNwPdaQywV2+s7/z30eJiGAVlniVGG/yCC+/OMxzrc3u7Bl8c74d3jPNiPr5I2Q6OcEdTyv/TcCqSwl2CwiYpmvM8WxAo9GXOCG4P8z3p5rKAdFvwx0pj+iU+QViJ4amYL0JfL/71JnRXMp9U4ewAgLP1a7j4OOCSIAAbbRReBp4ZH78CT7cdDbLdSRysLDq4bZxTDcSHcl55pkxyOKOa4oKwgY4wAEk5ZSyAkqigMg6wTa/GcE9wqUMbVJF2cLNygX+JfsmXDzchYIYTJ7PH72bK4kq4=
+  - COMMIT=${TRAVIS_COMMIT::8}
