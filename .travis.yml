@@ -2,24 +2,11 @@ sudo: required
 language: c++
 services:
 - docker
-before_install:
-- echo $DOCKER_EMAIL
-- echo $DOCKER_USER
-- export REPO=cwpearson/chai-intel-opencl1.2-cpu
 
 script:
-- docker build -t $REPO:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu .
-
-after_success:
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
+- docker build -t intel1.2:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu .
+- docker build -t intel2.0:$COMMIT -f  Dockerfile.intel_ocl2.0_cpu .
+- docker build -t intel2.0:$COMMIT -f  Dockerfile.nvidia .
 
 env:
-  global:
-  - secure: "n5vS0Z79b4U18h16gwctQtGBdHK+Tl1r59T4zDkD5BfAcRNQihBEh4gSWKOCTYTbq22fUb4INS+h2O206ieisURUSEwnrGp5qYmUQ4lNR2PHqzY0baerjhfWNJiBhbk9oxnLK6DpQk50kWkvunmxpt3H9yvm5grORZlthGaTbhvI/gFomPshaVBO6fAa8zS2S2te67SKngvYVnzzKR34CWSbaO9CMfcJKWI9SF1onRwkVmzpbErufPlqNcOBriH834S/xJJefKrlowo4oY0N736BNYzdC3O5qomKJd1JCjC6QGt+YcSBB9QDM9ZanhplFkwOAjL3mb3LIgdvcPExkRkhD5BU3tn4n1U8J125rvSCNwmHOc6QCBulftwxXFf2HEYcvufseypwEytGH9vDb/SZn4Y/4L8WTiH442vfV3Hmdvln0chCQrhKHyvTdp/5zInxpuebyU9yWdesCPW/LzLPnNzZomuLhvOffbYmgeJon68j1bSvRxHx8HQ4k6kzp/KiVCE+UxblwTwNrwLiOYtdjkaBr/M6AHqTqDFF0xjz5+q1DzTpDZc33XDOnKQeKQylYtoidYhkPA62/z2YE1cwcAQghsvASmkQdhI6Kgb02P9zgxJQ7g1LAeMJ6q2pTfXKB96xRklr2yKT0NEnLKPlhjxFWhb3xcL3eGFKRgM=" # DOCKER_PASS
-  - secure: "tOuKZZrXxZ+1x9YCeP+3jCxvW/oR5nSvodcLIOs0RHMMmOFeIpzR/tIEhSqZc6ph3rc8fL/FpxRmyIGHvc6OkZIQe7lNaPEVidxnaf0+CU0amgRH1qgVw7mt+Tv/ntB+cdLMcEv6ZH4dcucVU/i//6KgouyVyorYfHZ1Yv5jw2G01oX2awyytpGYc8wClN5SDZMp7iTPfDDGNDMAZ5nNyhsoG5HNlp4qELm89HeIfGLNmolpur8IX8ehdYb0kYgg0seDRNYVNXtONqOmRWIMYn7SuXa46yliqTfjdizpHJoW5zDwMZMeBhXs9wxwMBe6FgUVo8IAjLx738OxzhCS8TTY4iGuZN2Mq1Yp/Cw+DH82dKb8hoRV4CHqS5P+SVYzzLnJLPlYh41KRicnSlQt3+LCB7/eg5FUfNWcajd+dTm/uMC802hrdQt0bLNy4eoGohB2Y8/x3giKVUemOM8zXlhErIKt6vOkfmxBjW9wJ11/rrkWY3NNfvKGaK2E6NNWXPYUBqhlgcGcJ91M3XTnvTV33bnXpMo4yq+jJfPdSLyDM/BK8Xti7q/CIZX0QPs7jnGcdWls0N3LH+9BdTe9bWHA4ZoDzupPyRbMzrjNtgHtaGjeaUpyARaGMaPW/hkcdkDXEBC4Ty/wCoHYOguqaRbh/99KNSkNi6Qp713qSkM=" # DOCKER_EMAIL
-  - secure: "0VbTNKcty/g12ADs+66bNxF60P5RJKOEV2/HDwfq+G5INmmfknuLOMjkSF5c+4KpyNOor144NuZ/70M+Zpb0N4kCaFTi8Vr+eoBdhza+6oLq9dxQLR3RwFQVo1/ftonRXfFFtWdDTQdmvKSzEPLBZrZkExNq7Et7GolMI6fBRRTD7pgMQvg3iEm2P+vswFovtrpIwthj3SRD5LMdV5pljzuD8uaRknBECPrg3Z5LEf5gldVT9z1kfAU0KaJa4g/J3a8RuLR2L4hW0z+HACCQSHGzB67jsXp7KIb6dJfq+3oZOl5WP0tKuN48VTHUN8AamQLkiyiViquofq5AIggA3FEfDJh5tFnk3qUcxz9WkH3p38BydMZwks3PyIO6NF9Hq/RsuF35oERTj5wT/hjbPo8Ex5xfMC2gqFVbhaDtzhPIpaIJtrUzwtmADYa1ZhDlFvz+DrEgn4kRrqV8NT7PQ+xWd2JmpSlYhjjoia/z4/o9VGxFrpdZ3EZesPYyfXwpwqpMtu3ESHweRIMzU42sG8/3o3AhJt6MtqTXKwkpwgwkELPO4aA7sZn1iItwxFBUWwFZLHu/ewqYatQ4qnDMsCPaE3Z1fP5fiSiR31mUeUGtQthwUw/VX0lJBAyKokzZAton9tfpc3EdUygm2fY2Oqx0y1zvQe/omRBJNA7wlTA=" # DOCKER_USER
   - COMMIT=${TRAVIS_COMMIT::8}
