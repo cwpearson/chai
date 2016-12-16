@@ -1,9 +1,8 @@
-FROM cpwearson/opencl2.0-intel-cpu
+FROM cwpearson/opencl2.0-intel-cpu
 
 RUN apt-get update && apt-get install --no-install-recommends -y libopencv-dev g++ \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 
 # Set the environment variables Chai expects
 ENV CHAI_OCL_INC /opt/intel/opencl/include
@@ -11,11 +10,12 @@ ENV CHAI_OCL_LIB /opt/intel/opencl
 
 # Make the Chai OpenCL source files visible to the container
 ADD ./OpenCL2.0 chai/OpenCL2.0
+WORKDIR chai/OpenCL2.0
 
 # Build  OpenCL 2.0 version of all benchmarks
-RUN cd chai/OpenCL2.0 \
-    && for bench in *; do \
-         cd $bench; \
-         make -j; \
-         cd ..; \
-       done
+RUN for bench in *; do \
+      echo $bench; \
+      cd $bench; \
+      make -j; \
+      cd ..; \
+    done

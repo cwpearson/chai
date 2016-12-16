@@ -10,12 +10,13 @@ ENV CHAI_OCL_LIB=/opt/intel/opencl-1.2-6.4.0.25/lib64
 ENV CHAI_OCL_INC=/usr/include
 
 # Make the Chai source files visible to the container
-ADD ./OpenCL1.2 chai/OpenCL1.2
+ADD OpenCL1.2 chai/OpenCL1.2
+WORKDIR chai/OpenCL1.2
 
 # Build  OpenCL 1.2 version of all benchmarks
-RUN cd chai/OpenCL1.2 \
-    && for bench in *; do \
-         cd $bench; \
-         make -j; \
-         cd ..; \
-       done
+RUN for bench in *; do \
+      echo $bench; \
+      cd $bench; \
+      make -j; \
+      cd ..; \
+    done
