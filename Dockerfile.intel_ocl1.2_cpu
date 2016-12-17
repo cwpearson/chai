@@ -1,16 +1,18 @@
 FROM cwpearson/opencl1.2-intel-cpu
 
 # Install opencv, OpenCL 1.2 headers, and other things needed to build OpenCL code
-RUN apt-get update -qq && apt-get install --no-install-recommends -yqq libopencv-dev g++ \
+RUN apt-get update -qq && apt-get install --no-install-recommends -yqq libopencv-core-dev libopencv-highgui-dev libopencv-imgproc-dev g++ \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Export the evironment variables Chai expects
-ENV CHAI_OCL_LIB=/opt/intel/opencl-1.2-6.4.0.25/lib64
-ENV CHAI_OCL_INC=/usr/include
+ENV CHAI_OCL_LIB /opt/intel/opencl-1.2-6.4.0.25/lib64
+ENV CHAI_OCL_INC /usr/include
 
 # Make the Chai source files visible to the container
 ADD OpenCL1.2 chai/OpenCL1.2
+ADD bin chai/bin
+ENV PATH /chai/bin:$PATH
 WORKDIR chai/OpenCL1.2
 
 # Build  OpenCL 1.2 version of all benchmarks
