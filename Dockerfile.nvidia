@@ -20,7 +20,8 @@ RUN mkdir -p /etc/OpenCL/vendors && \
 ADD ./OpenCL1.2 chai/OpenCL1.2
 
 # Build  OpenCL 1.2 version of all benchmarks
-RUN export CHAI_OCL_LIB=/usr/local/cuda/lib64 export CHAI_OCL_INC=/usr/local/cuda/include && \
+RUN set -e; \
+    export CHAI_OCL_LIB=/usr/local/cuda/lib64 export CHAI_OCL_INC=/usr/local/cuda/include && \
     cd chai/OpenCL1.2 && \
     for bench in *; do \
       echo $bench; \

@@ -13,7 +13,8 @@ ADD ./OpenCL2.0 chai/OpenCL2.0
 WORKDIR chai/OpenCL2.0
 
 # Build  OpenCL 2.0 version of all benchmarks
-RUN for bench in *; do \
+RUN set -e; \
+    for bench in *; do \
       echo $bench; \
       cd $bench; \
       make -j; \
