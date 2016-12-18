@@ -1,4 +1,4 @@
-set -e
+#set -e
 
 cd "$BENCH_ROOT"/BFS  && echo BFS  && ./bfs
 cd "$BENCH_ROOT"/BS   && echo BS   && ./bs
