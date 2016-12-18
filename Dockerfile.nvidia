@@ -1,23 +1,14 @@
-FROM nvidia/cuda:8.0-devel
+FROM cwpearson/opencl1.2-nvidia-gpu
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV CHAI_OCL_LIB $OCL_LIB
+ENV CHAI_OCL_INC $OCL_INC
 
 # Install OpenCV
-RUN apt-get update && apt-get install --no-install-recommends -y libopencv-dev
-
-# Set up NVIDIA OpenCL environment
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    build-essential \
-    #nvidia-modprobe \
-    ocl-icd-libopencl1 \
-    ocl-icd-opencl-dev \
-    #clinfo \
-    && rm -rf /var/lib/apt/lists/*
-RUN mkdir -p /etc/OpenCL/vendors && \
-    echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
-
-ENV CHAI_OCL_LIB /usr/local/cuda/lib64
-ENV CHAI_OCL_INC /usr/local/cuda/include
+    libopencv-core-dev libopencv-highgui-dev libopencv-imgproc-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Make the OpenCL1.2 files visible to the container
 ADD bin chai/bin
@@ -32,4 +23,5 @@ RUN set -e; \
       cd $bench; \
       make -j; \
       cd ..; \
-    done
+    done \
+    && find . -name "*.o" -delete

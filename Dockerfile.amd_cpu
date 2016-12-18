@@ -13,13 +13,22 @@ ADD ./OpenCL1.2 chai/OpenCL1.2
 ADD ./OpenCL2.0 chai/OpenCL2.0
 ADD bin chai/bin
 ENV PATH /chai/bin:$PATH
-WORKDIR chai/OpenCL1.2
+WORKDIR chai/
 
-# Build  OpenCL 2.0 version of all benchmarks
+# Build OpenCL 1.2 benchmarks
 RUN set -e; \
-    for bench in *; do \
+    for bench in OpenCL1.2/*; do \
       echo $bench; \
       cd $bench; \
       make -j; \
-      cd ..; \
+      cd -; \
+    done
+
+# Build  OpenCL 2.0 version of all benchmarks
+RUN set -e; \
+    for bench in OpenCL2.0/*; do \
+      echo $bench; \
+      cd $bench; \
+      make -j; \
+      cd -; \
     done
