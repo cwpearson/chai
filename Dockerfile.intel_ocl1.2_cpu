@@ -6,8 +6,8 @@ RUN apt-get update -qq && apt-get install --no-install-recommends -yqq libopencv
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Export the evironment variables Chai expects
-ENV CHAI_OCL_LIB /opt/intel/opencl-1.2-6.4.0.25/lib64
-ENV CHAI_OCL_INC /usr/include
+ENV CHAI_OCL_LIB $OCL_LIB
+ENV CHAI_OCL_INC $OCL_INC
 
 # Make the Chai source files visible to the container
 ADD OpenCL1.2 chai/OpenCL1.2
