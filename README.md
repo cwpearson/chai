@@ -82,5 +82,10 @@ To build the docker image for OpenCL 1.2 and 2.0 respectively, use
 
 To run a benchmark (for example, BS) from the two images, use
 
-    docker run -it chai-intel-1.2 bash -c "cd chai/OpenCL1.2/BS/ && ./bs"
-    docker run -it chai-intel-2.0 bash -c "cd chai/OpenCL2.0/BS/ && ./bs"
+    docker run -it chai-intel-1.2 bash -c "cd BS/ && ./bs"
+    docker run -it chai-intel-2.0 bash -c "cd BS/ && ./bs"
+
+To run all the benchmarks, try
+
+    docker run -it chai-intel-1.2 bash -c "test.sh"
+
