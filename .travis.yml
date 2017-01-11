@@ -5,10 +5,12 @@ services:
 before_script:
 
 script:
-- docker build -t intel1.2:$COMMIT -f  Dockerfile.intel_ocl1.2_cpu .
-- docker build -t intel2.0:$COMMIT -f  Dockerfile.intel_ocl2.0_cpu .
+- docker build -f $DOCKERFILE .
 #- docker run -it intel1.2:$COMMIT bash -c "BENCH_ROOT=/chai/OpenCL1.2 test.sh"
 #- docker run -it intel2.0:$COMMIT bash -c "BENCH_ROOT=/chai/OpenCL2.0 test.sh"
 
 env:
   - COMMIT=${TRAVIS_COMMIT::8}
+  - DOCKERFILE=Dockerfile.intel_ocl1.2_cpu
+  - DOCKERFILE=Dockerfile.intel_ocl2.0_cpu
+  - DOCKERFILE=Dockerfile.amd_cpu
