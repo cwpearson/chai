@@ -53,12 +53,17 @@ custom_exe_terms = {
     "cedd" : {
         GPU_KERNEL_KEY    : "GPU Proxy: Kernel",
         CPU_KERNEL_KEY    : "CPU Proxy: Kernel",
-        TOTAL_PROXIES_KEY : "Total Proxies"
+        TOTAL_PROXIES_KEY : "Total Proxies",
+        H2D_KEY : "Copy To",
+        D2H_KEY : "Copy Back"
     },
     "cedt" : {
         GPU_KERNEL_KEY : "GPU Proxy: Kernel",
         CPU_KERNEL_KEY : "CPU Proxy: Kernel",
         TOTAL_PROXIES_KEY : "Total Proxies"
+    },
+    "rscd" : {
+        D2H_KEY : "Copy Back" # CUDA-D/rscd
     }
 }
 
@@ -81,14 +86,14 @@ EXE = os.path.split(BENCH_PATH)[1]
 EXE = EXE.lower()
 
 
-print BENCH_PATH, "->", EXE
+print "BENCH_PATH:", BENCH_PATH
 print "TYPE:", TYPE
 print "EXE:", EXE
 
 os.environ["CHAI_CUDA_LIB"] = "/usr/local/cuda/lib64"
 os.environ["CHAI_CUDA_INC"] = "/usr/local/cuda/include"
 
-with open(EXE+".csv", 'w') as csvfile:
+with open(TYPE.lower()+"_"+EXE+".csv", 'w') as csvfile:
 
     # Start with base terms
     search_terms = base_terms
@@ -121,7 +126,7 @@ with open(EXE+".csv", 'w') as csvfile:
             print "couldn't find", rel_exe
             subprocess.call("make")
 
-        for i in range(10):
+        for i in range(1):
             process = subprocess.Popen([rel_exe], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
             print out
