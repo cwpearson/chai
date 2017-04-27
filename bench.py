@@ -32,17 +32,24 @@ def get_num_after(text, substr):
 GPU_KERNEL_KEY = "gpu_kernel"
 CPU_KERNEL_KEY = "cpu_kernel"
 TOTAL_PROXIES_KEY = "total_prox"
+H2D_KEY = "h2d"
+D2H_KEY = "d2h"
 
-default_search_terms = {
+base_terms = {
     "init"       : "Initialization",
     "alloc"      : "Allocation",
-    "h2d"        : "Copy To",
     GPU_KERNEL_KEY : "Kernel",
-    "d2h"        : "Copy Back",
     "dealloc"    : "Dealloc"
 }
 
-custom_search_terms = {
+custom_type_terms = {
+    "CUDA-D" : {
+        H2D_KEY : "Copy To",
+        D2H_KEY : "Copy Back"
+    }
+}
+
+custom_exe_terms = {
     "cedd" : {
         GPU_KERNEL_KEY    : "GPU Proxy: Kernel",
         CPU_KERNEL_KEY    : "CPU Proxy: Kernel",
@@ -55,9 +62,9 @@ custom_search_terms = {
     }
 }
 
-def get_row(exe, text, header, search_terms):
-    row_out = []
-    for k in header:
+def get_row(num, text, header, search_terms):
+    row_out = [num]
+    for k in header[1:]: # skip "row"
         search_term = search_terms[k]
         row_out = row_out + [get_num_after(text, search_term)]
     return row_out
@@ -68,55 +75,57 @@ if len(sys.argv) < 2:
 
 
 
-BENCH_DIR = sys.argv[1]
-EXE = os.path.split(BENCH_DIR)[-1]
+BENCH_PATH = sys.argv[1]
+TYPE = os.path.split(BENCH_PATH)[0]
+EXE = os.path.split(BENCH_PATH)[1]
 EXE = EXE.lower()
 
-print BENCH_DIR, "->", EXE
+
+print BENCH_PATH, "->", EXE
+print "TYPE:", TYPE
+print "EXE:", EXE
 
 os.environ["CHAI_CUDA_LIB"] = "/usr/local/cuda/lib64"
 os.environ["CHAI_CUDA_INC"] = "/usr/local/cuda/include"
 
 with open(EXE+".csv", 'w') as csvfile:
 
-    search_terms = {}
+    # Start with base terms
+    search_terms = base_terms
 
-    # Add default search terms
-    for k in default_search_terms:
-        search_terms[k] = default_search_terms[k]
+    # Add or override any base on the benchmark type
+    if TYPE in custom_type_terms:
+        custom_terms = custom_type_terms[TYPE]
+        for k in custom_terms:
+            search_terms[k] = custom_terms[k]
 
-    # Override any default terms
-    if EXE in custom_search_terms:
-        for k in search_terms:
-            if k in custom_search_terms[EXE]:
-                search_terms[k] = custom_search_terms[EXE][k]
-
-    # Add any custom search terms
-    if EXE in custom_search_terms:
-        for k in custom_search_terms[EXE]:
-            if k not in default_search_terms:
-                search_terms[k] = custom_search_terms[EXE][k]
+    # Add or override any terms based on the benchmark
+    if EXE in custom_exe_terms:
+        custom_terms = custom_exe_terms[EXE]
+        for k in custom_terms:
+            search_terms[k] = custom_terms[k]
 
 
     print search_terms
 
-    header = [k for k in search_terms]
+    header = ["run"] + [k for k in search_terms]
+    print header
 
     writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     writer.writerow(header)
 
-    with cd(BENCH_DIR):
+    with cd(BENCH_PATH):
         rel_exe = os.path.join("./", EXE)
 
         if not os.path.isfile(rel_exe):
             print "couldn't find", rel_exe
             subprocess.call("make")
 
-        for i in range(1):
+        for i in range(10):
             process = subprocess.Popen([rel_exe], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
             print out
-            row = get_row(rel_exe, out, header, search_terms)
+            row = get_row(i, out, header, search_terms)
             print row
             writer.writerow(row)
     csvfile.close()
