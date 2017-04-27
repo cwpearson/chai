@@ -126,11 +126,11 @@ with open(TYPE.lower()+"_"+EXE+".csv", 'w') as csvfile:
             print "couldn't find", rel_exe
             subprocess.call("make")
 
-        for i in range(1):
+        for i in range(10):
             process = subprocess.Popen([rel_exe], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
             print out
-            row = get_row(i, out, header, search_terms)
+            row = get_row(i+1, out, header, search_terms)
             print row
             writer.writerow(row)
     csvfile.close()
